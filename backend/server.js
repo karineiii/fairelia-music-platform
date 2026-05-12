@@ -1,10 +1,17 @@
 require("dotenv").config();
 
+const connectDB = require("./config/database");
+
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+
+const authRoutes = require("./routes/auth");
+const musicRoutes = require("./routes/music");
+
+connectDB();
 
 const app = express();
 
@@ -19,6 +26,9 @@ app.use(
     max: 100,
   })
 );
+
+app.use("/api/auth", authRoutes);
+app.use("/api/music", musicRoutes);
 
 app.get("/", (req, res) => {
   res.json({
